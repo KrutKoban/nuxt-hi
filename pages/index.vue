@@ -11,8 +11,8 @@
 
       <div class="container" id="scanIdCardPage">
         <div class="scanIdCardDiv">
-                <div class="scanCardContainer" v-show="afterTakingPhoto">
-                    <video ref="video" id="video" :style="{width: divWidth}" autoplay></video>
+                <div class="scanCardContainer" >
+                    <video ref="video" id="video" autoplay></video>
                     <canvas ref="canvas" id="canvas" width="320" height="240" style="display: none;"></canvas>
                 </div>
             </div>
@@ -42,8 +42,7 @@ export default {
   data: () => {
     return {
       video: {},
-			canvas: {},
-			captures: []
+      front: true
     }
   },
   methods: {
