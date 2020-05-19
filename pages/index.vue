@@ -8,14 +8,23 @@
       <h2 class="subtitle">
         Nuxt.js project1
       </h2>
-      <div><video ref="video" id="video" width="640" height="480" autoplay></video></div>
-      <div><button id="snap" v-on:click="capture()">Snap Photo</button></div>
-      <canvas ref="canvas" id="canvas" width="640" height="480"></canvas>
-      <ul>
-          <li v-for="c in captures">
-              <img v-bind:src="c" height="50" />
-          </li>
-      </ul>
+
+      <div class="container" id="scanIdCardPage">
+        <div class="scanIdCardDiv">
+                <div class="scanCardContainer" v-show="afterTakingPhoto">
+                    <video ref="video" id="video" :style="{width: divWidth}" autoplay></video>
+                    <canvas ref="canvas" id="canvas" width="320" height="240" style="display: none;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="takePhotoBtnDiv">
+            <div>
+                <button type="button" class="btn btn-info" @click="camera('environment')">Back Camera</button>
+                <button type="button" class="btn btn-info" @click="camera('user')">front Camera</button>
+            </div>
+        </div>
+    </div>
 
       
     </div>
@@ -38,24 +47,33 @@ export default {
     }
   },
   methods: {
-		capture() {
-			this.canvas = this.$refs.canvas;
-			var context = this.canvas
-				.getContext("2d")
-				.drawImage(this.video, 0, 0, 640, 480);
-			this.captures.push(canvas.toDataURL("image/png"));
-		}
-	},
-  mounted() {
-		this.video = this.$refs.video;
-		if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-			navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then(stream => {
-				console.log(stream)
-				video.srcObject = stream;
-				this.video.play();
-			});
-		}
-	},
+    camera(face) {
+      this.stop();
+      this.gum(face);
+    },
+    stop() {
+      return video.srcObject && video.srcObject.getTracks().map(t => t.stop());
+    },
+    gum(face) {
+      if(face === 'user') {
+          return navigator.mediaDevices.getUserMedia({video: {facingMode: face}})
+          .then(stream => {
+              video.srcObject = stream;
+              this.localstream = stream;
+          });
+      }
+      if(face === 'environment') {
+          return navigator.mediaDevices.getUserMedia({video: {facingMode: {exact: face}}})
+          .then(stream => {
+              video.srcObject = stream;
+              this.localstream = stream;
+          });
+      }
+    }
+    },
+    mounted() {
+      this.camera('environment');
+    },
 }
 </script>
 
