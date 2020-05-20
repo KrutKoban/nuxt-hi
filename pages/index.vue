@@ -72,11 +72,39 @@ export default {
     },
     mounted() {
       this.camera('environment');
+      var idx = 0;
+      var filters = ['grayscale', 'sepia', 'blur', ''];
+
+      function changeFilter(e) {
+        console.log('here');
+        var el = e.target;
+        el.className = '';
+        var effect = filters[idx++ % filters.length]; // loop through filters.
+        if (effect) {
+          el.classList.add(effect);
+        }
+      }
+
+      document.querySelector('video').addEventListener('click', changeFilter, false);
     },
 }
 </script>
 
 <style>
+video {
+  background: rgba(255,255,255,0.5);
+  border: 1px solid #ccc;
+}
+.grayscale {
+  filter: grayscale(1);
+}
+.sepia {
+  filter: sepia(1);
+}
+.blur {
+  filter: blur(3px);
+}
+
 .container {
   min-height: 100vh;
   display: flex;
