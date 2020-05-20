@@ -1,14 +1,6 @@
 <template>
   <section class="container">
     <div>
-      <app-logo/>
-      <h1 class="title">
-        nuxt-hi
-      </h1>
-      <h2 class="subtitle">
-        Nuxt.js project1
-      </h2>
-
       <div class="container" id="scanIdCardPage">
         <div class="scanIdCardDiv">
                 <div class="scanCardContainer" >
@@ -32,13 +24,8 @@
 </template>
 
 <script>
-import AppLogo from '~/components/AppLogo.vue'
 
 export default {
-  components: {
-    AppLogo,
-  },
-
   data: () => {
     return {
       video: {},
