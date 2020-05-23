@@ -46,10 +46,11 @@ export default {
       if(face === 'environment') {
           return navigator.mediaDevices.getUserMedia({video: {facingMode: {exact: face}}})
           .then(stream => {
-              video2.srcObject = stream;
+              video.srcObject = stream;
               this.localstream = stream;
           })
           .catch(e => {
+            alert(e);
             console.log(e);
           });
       }
