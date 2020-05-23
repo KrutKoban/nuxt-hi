@@ -1,14 +1,7 @@
 <template>
   <section class="container">
     <div>
-      <div class="container" id="scanIdCardPage">
-        <div class="scanIdCardDiv">
-          <div class="scanCardContainer" >
-            <video ref="video" id="video" autoplay></video>
-            <canvas ref="canvas" id="canvas" width="320" height="240" style="display: none;"></canvas>
-          </div>
-        </div>
-      </div>
+      <video ref="video" id="video" autoplay></video>
 
       <div class="photo-buttons">
         <button type="button" class="btn-back" @click="camera('environment')">Back Camera</button>
@@ -22,10 +15,7 @@
 
 export default {
   data: () => {
-    return {
-      video: {},
-      front: true
-    }
+    return {}
   },
   methods: {
     camera(face) {
@@ -40,17 +30,14 @@ export default {
           return navigator.mediaDevices.getUserMedia({video: {facingMode: face}})
           .then(stream => {
               video.srcObject = stream;
-              this.localstream = stream;
           });
       }
       if(face === 'environment') {
           return navigator.mediaDevices.getUserMedia({video: {facingMode: {exact: face}}})
           .then(stream => {
               video.srcObject = stream;
-              this.localstream = stream;
           })
           .catch(e => {
-            alert(e);
             console.log(e);
           });
       }
