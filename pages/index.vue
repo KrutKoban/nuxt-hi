@@ -1,24 +1,15 @@
 <template>
   <section class="container">
     <div>
-      <div class="container" id="scanIdCardPage">
-        <div class="scanIdCardDiv">
-                <div class="scanCardContainer" >
-                    <video ref="video" id="video" autoplay></video>
-                    <canvas ref="canvas" id="canvas" width="320" height="240" style="display: none;"></canvas>
-                </div>
-            </div>
-        </div>
+      <div id="scan-card-page">
+          <video class="video-size" ref="video" id="video" autoplay></video>
+          <!-- <canvas ref="canvas" id="canvas" width="320" height="240" style="display: none;"></canvas> -->
+      </div>
 
-        <div class="takePhotoBtnDiv">
-            <div>
-                <button type="button" class="btn btn-info" @click="camera('environment')">Back Camera</button>
-                <button type="button" class="btn btn-info" @click="camera('user')">front Camera</button>
-            </div>
-        </div>
-    </div>
-
-      
+      <div class="photo-buttons">
+        <button type="button" class="btn-back" @click="camera('environment')">Back Camera</button>
+        <button type="button" class="btn-front" @click="camera('user')">front Camera</button>
+      </div>
     </div>
   </section>
 </template>
@@ -28,8 +19,9 @@
 export default {
   data: () => {
     return {
-      video: {},
-      front: true
+      // video: {},
+      front: true,
+      localstream: null
     }
   },
   methods: {
@@ -51,37 +43,77 @@ export default {
       if(face === 'environment') {
           return navigator.mediaDevices.getUserMedia({video: {facingMode: {exact: face}}})
           .then(stream => {
-              video.srcObject = stream;
+              video2.srcObject = stream;
               this.localstream = stream;
           });
       }
     }
-    },
-    mounted() {
-      this.camera('environment');
-      var idx = 0;
-      var filters = ['grayscale', 'sepia', 'blur', ''];
+  },
 
-      function changeFilter(e) {
-        console.log('here');
-        var el = e.target;
-        el.className = '';
-        var effect = filters[idx++ % filters.length]; // loop through filters.
-        if (effect) {
-          el.classList.add(effect);
-        }
+  mounted() {
+    this.camera('environment');
+    var idx = 0;
+    var filters = ['grayscale', 'sepia', 'blur', ''];
+
+    function changeFilter(e) {
+      var el = e.target;
+      el.className = '';
+      var effect = filters[idx++ % filters.length]; // loop through filters.
+      if (effect) {
+        el.classList.add(effect);
       }
+    }
 
-      document.querySelector('video').addEventListener('click', changeFilter, false);
-    },
+    document.querySelector('video').addEventListener('click', changeFilter, false);
+  },
 }
 </script>
 
 <style>
-video {
+@media (min-width: 320px)
+  and (max-width: 425px) {
+  .video-size {
+    width: 100vw;
+    height: 50vh;
+  }
+
+  .btn-back,
+  .btn-front {
+    width: 30vw;
+    height: 10vh;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: white;
+  }
+}
+
+@media (min-width: 1024px) {
+  .video-size {
+    width: 50vw;
+    height: 50vh;
+  }
+
+  .btn-back,
+  .btn-front {
+    width: 10vw;
+    height: 5vh;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: white;
+  }
+}
+
+.photo-buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+/* video {
   background: rgba(255,255,255,0.5);
   border: 1px solid #ccc;
-}
+  
+} */
+
 .grayscale {
   filter: grayscale(1);
 }
@@ -98,38 +130,6 @@ video {
   justify-content: center;
   align-items: center;
   text-align: center;
-}
-
-.title {
-  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 1 */
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
-
-.preview {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.preview img {
-  max-width: 100%;
-  max-height: 500px;
 }
 </style>
 
