@@ -2,7 +2,7 @@
   <section class="container">
     <div>
       <div id="scan-card-page">
-          <video class="video-size" ref="video" id="video" autoplay></video>
+          <video ref="video" id="video" autoplay></video>
           <canvas ref="canvas" id="canvas" width="320" height="240" style="display: none;"></canvas>
       </div>
 
