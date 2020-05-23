@@ -3,7 +3,7 @@
     <div>
       <div id="scan-card-page">
           <video class="video-size" ref="video" id="video" autoplay></video>
-          <!-- <canvas ref="canvas" id="canvas" width="320" height="240" style="display: none;"></canvas> -->
+          <canvas ref="canvas" id="canvas" width="320" height="240" style="display: none;"></canvas>
       </div>
 
       <div class="photo-buttons">
@@ -19,7 +19,6 @@
 export default {
   data: () => {
     return {
-      // video: {},
       front: true,
       localstream: null
     }
@@ -45,6 +44,9 @@ export default {
           .then(stream => {
               video2.srcObject = stream;
               this.localstream = stream;
+          })
+          .catch(e => {
+            console.log(e);
           });
       }
     }
@@ -108,11 +110,9 @@ export default {
   justify-content: space-around;
 }
 
-/* video {
-  background: rgba(255,255,255,0.5);
-  border: 1px solid #ccc;
-  
-} */
+video {
+  width: 100%;  
+} 
 
 .grayscale {
   filter: grayscale(1);
