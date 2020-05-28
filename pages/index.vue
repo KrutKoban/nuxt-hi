@@ -1,7 +1,16 @@
 <template>
   <section class="container">
     <div>
-      <video ref="video" id="video" autoplay></video>
+      <div v-show="cameraRun" class="video-caontainer">
+        <video ref="video" id="video" autoplay></video>
+        <div
+          class="video-inner-block"
+          ref="red_block"
+          @mousedown="onMouseDown"  
+        >
+          <video ref="video2" id="video2" autoplay></video>
+        </div>
+      </div>
 
       <div class="photo-buttons">
         <button type="button" class="btn-back" @click="camera('environment')">Back Camera</button>
@@ -15,10 +24,37 @@
 
 export default {
   data: () => {
-    return {}
+    return {
+      cameraRun: false
+    }
   },
   methods: {
+    onMouseDown(e) {
+      let ball = this.$refs.red_block;
+
+      const moveAt = (e) => {
+        ball.style.left = e.pageX - ball.offsetWidth / 2 + 'px';
+        ball.style.top = e.pageY - ball.offsetHeight / 2 + 'px';
+      }
+      moveAt(e);
+      // document.body.appendChild(ball);
+
+      ball.style.zIndex = 1000;
+
+      
+
+      document.onmousemove = function(e) {
+        moveAt(e);
+      }
+
+      ball.onmouseup = function() {
+        document.onmousemove = null;
+        ball.onmouseup = null;
+      }
+    },
+
     camera(face) {
+      this.cameraRun = true;
       this.stop();
       this.gum(face);
     },
@@ -29,13 +65,17 @@ export default {
       if(face === 'user') {
           return navigator.mediaDevices.getUserMedia({video: {facingMode: face}})
           .then(stream => {
-              video.srcObject = stream;
+              // this.localStream = stream;
+              // video.srcObject = stream;
+              video2.srcObject = stream;
           });
       }
       if(face === 'environment') {
           return navigator.mediaDevices.getUserMedia({video: {facingMode: {exact: face}}})
           .then(stream => {
+              // this.localStream = stream;
               video.srcObject = stream;
+              // video2.srcObject = stream;
           })
           .catch(e => {
             console.log(e);
@@ -46,6 +86,7 @@ export default {
 
   mounted() {
     this.camera('environment');
+    this.camera('user');
     var idx = 0;
     var filters = ['grayscale', 'sepia', 'blur', ''];
 
@@ -122,6 +163,19 @@ video {
   justify-content: center;
   align-items: center;
   text-align: center;
+}
+
+.video-container {
+  position: relative;
+}
+
+.video-inner-block {
+  width: 100px;
+  height: 70px;
+  border: 1px solid red;
+  position: absolute;
+  top: 50%;
+  left: 50%;
 }
 </style>
 
