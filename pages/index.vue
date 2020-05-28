@@ -100,6 +100,14 @@ export default {
     }
 
     document.querySelector('video').addEventListener('click', changeFilter, false);
+
+    const startup = () => {
+      console.log('DOMContentLoaded');
+      const el = document.getElementsByClassName('video-inner-block')[0];
+      el.addEventListener("touchmove", this.onMouseDown, false);
+    }
+
+    document.addEventListener("DOMContentLoaded", startup);
   },
 }
 </script>
@@ -145,6 +153,7 @@ export default {
 
 video {
   width: 100%;  
+  height: 100%;
 } 
 
 .grayscale {
