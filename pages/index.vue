@@ -6,7 +6,6 @@
         <div
           class="video-inner-block"
           ref="red_block"
-          @mousedown="onMouseDown"  
         >
           <video ref="video2" id="video2" autoplay></video>
         </div>
@@ -101,13 +100,25 @@ export default {
 
     document.querySelector('video').addEventListener('click', changeFilter, false);
 
-    const startup = () => {
-      console.log('DOMContentLoaded');
-      const el = document.getElementsByClassName('video-inner-block')[0];
-      el.addEventListener("touchmove", this.onMouseDown, false);
-    }
+    // const startup = () => {
+      // console.log('DOMContentLoaded');
+    const el = document.getElementsByClassName('video-inner-block')[0];
+    console.log(el);
+    el.addEventListener('touchmove', (e) => {
+      var touchLocation = e.targetTouches[0];
+      
+      el.style.left = touchLocation.pageX + 'px';
+      el.style.top = touchLocation.pageY + 'px';
+    });
 
-    document.addEventListener("DOMContentLoaded", startup);
+    el.addEventListener('touchend', (e) => {
+      // current box position.
+      var x = parseInt(el.style.left);
+      var y = parseInt(el.style.top);
+    })
+    // el.addEventListener("touchmove", this.onMouseDown, false);
+    // }
+    // document.addEventListener("DOMContentLoaded", startup);
   },
 }
 </script>
