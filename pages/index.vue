@@ -65,7 +65,7 @@ export default {
           return navigator.mediaDevices.getUserMedia({video: {facingMode: face}})
           .then(stream => {
               // this.localStream = stream;
-              // video.srcObject = stream;
+              video.srcObject = stream;
               video2.srcObject = stream;
           });
       }
@@ -183,6 +183,7 @@ video {
   justify-content: center;
   align-items: center;
   text-align: center;
+  overflow: hidden;
 }
 
 .video-container {
