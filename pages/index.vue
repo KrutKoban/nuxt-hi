@@ -2,7 +2,7 @@
   <section class="container">
     <div>
       <div v-show="cameraRun" class="video-caontainer">
-        <video ref="video" id="video" autoplay></video>
+        <video class="video-size" ref="video" id="video" autoplay></video>
         <div
           class="video-inner-block"
           ref="red_block"
@@ -24,31 +24,54 @@
 export default {
   data: () => {
     return {
-      cameraRun: false
+      cameraRun: false,
+      idx: 0,
+      filters: ['grayscale', 'sepia', 'blur', '']
     }
   },
+
+  computed: {
+    movingCamera() {
+      return this.$refs.video2;
+    }
+  },
+
   methods: {
+    changeFilter(e) {
+      const el = e.target;
+      el.className = '';
+      const effect = this.filters[this.idx++ % this.filters.length]; // loop through filters.
+      if (effect) {
+        el.classList.add(effect);
+      }
+    },
+
+    onTouchMove(e) {
+      const touchLocation = e.targetTouches[0];
+      const movCamera = this.movingCamera;
+      
+      movCamera.style.left = touchLocation.pageX + 'px';
+      movCamera.style.top = touchLocation.pageY + 'px';
+    },
+
     onMouseDown(e) {
-      let ball = this.$refs.red_block;
+      const movCamera = this.movingCamera;
 
       const moveAt = (e) => {
-        ball.style.left = e.pageX - ball.offsetWidth / 2 + 'px';
-        ball.style.top = e.pageY - ball.offsetHeight / 2 + 'px';
+        movCamera.style.left = e.pageX - movCamera.offsetWidth / 2 + 'px';
+        movCamera.style.top = e.pageY - movCamera.offsetHeight / 2 + 'px';
       }
       moveAt(e);
-      // document.body.appendChild(ball);
 
-      ball.style.zIndex = 1000;
-
-      
+      movCamera.style.zIndex = 1000;
 
       document.onmousemove = function(e) {
         moveAt(e);
       }
 
-      ball.onmouseup = function() {
+      movCamera.onmouseup = function() {
         document.onmousemove = null;
-        ball.onmouseup = null;
+        movCamera.onmouseup = null;
       }
     },
 
@@ -65,7 +88,7 @@ export default {
           return navigator.mediaDevices.getUserMedia({video: {facingMode: face}})
           .then(stream => {
               // this.localStream = stream;
-              video.srcObject = stream;
+              // video.srcObject = stream;
               video2.srcObject = stream;
           });
       }
@@ -86,46 +109,25 @@ export default {
   mounted() {
     this.camera('environment');
     this.camera('user');
-    var idx = 0;
-    var filters = ['grayscale', 'sepia', 'blur', ''];
 
-    function changeFilter(e) {
-      var el = e.target;
-      el.className = '';
-      var effect = filters[idx++ % filters.length]; // loop through filters.
-      if (effect) {
-        el.classList.add(effect);
-      }
-    }
+    document.querySelector('video').addEventListener('click', this.changeFilter, false);
 
-    document.querySelector('video').addEventListener('click', changeFilter, false);
-
-    // const startup = () => {
-      // console.log('DOMContentLoaded');
-    const el = document.getElementsByClassName('video-inner-block')[0];
-    console.log(el);
-    el.addEventListener('touchmove', (e) => {
-      var touchLocation = e.targetTouches[0];
-      
-      el.style.left = touchLocation.pageX + 'px';
-      el.style.top = touchLocation.pageY + 'px';
-    });
-
-    el.addEventListener('touchend', (e) => {
-      // current box position.
-      var x = parseInt(el.style.left);
-      var y = parseInt(el.style.top);
-    })
-    // el.addEventListener("touchmove", this.onMouseDown, false);
-    // }
-    // document.addEventListener("DOMContentLoaded", startup);
+    this.movingCamera.addEventListener('touchmove', this.onTouchMove);
+    this.movingCamera.addEventListener('mousedown', this.onMouseDown);
   },
 }
 </script>
 
 <style>
-@media (min-width: 320px)
-  and (max-width: 425px) {
+@media (min-width: 320px) and (max-width: 1024px) {
+  #video2 {
+    width: 30vw;
+    height: 17vh;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
+
   .video-size {
     width: 100vw;
     height: 50vh;
@@ -142,6 +144,14 @@ export default {
 }
 
 @media (min-width: 1024px) {
+  #video2 {
+    width: 15vw;
+    height: 30vh;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
+
   .video-size {
     width: 50vw;
     height: 50vh;
@@ -162,10 +172,9 @@ export default {
   justify-content: space-around;
 }
 
-video {
+/*video {
   width: 100%;  
-  height: 100%;
-} 
+} */
 
 .grayscale {
   filter: grayscale(1);
@@ -183,20 +192,10 @@ video {
   justify-content: center;
   align-items: center;
   text-align: center;
-  overflow: hidden;
 }
 
 .video-container {
   position: relative;
-}
-
-.video-inner-block {
-  width: 100px;
-  height: 70px;
-  border: 1px solid red;
-  position: absolute;
-  top: 50%;
-  left: 50%;
 }
 </style>
 
