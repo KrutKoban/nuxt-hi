@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "express-http-proxy": "^1.6.0",
-    "nuxt": "^2.0.0",
+    "nuxt": "^2.15.8",
     "vuedraggable": "^2.23.2"
   },
   "devDependencies": {
